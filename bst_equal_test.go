@@ -20,14 +20,17 @@ func TestNodesWithChildrenAreEqual(t *testing.T) {
 	}
 }
 
-func TestDifferentNodesAreNotEqual(t *testing.T) {
+func TestNodesWithDifferentKeysAreNotEqual(t *testing.T) {
 	n1 := Node{1, nil, nil}
 	n2 := Node{2, nil, nil}
 	if n1.Equals(&n2) || n2.Equals(&n1) {
 		t.FailNow()
 	}
-	n1 = Node{1, &Node{0, nil, nil}, nil}
-	n2 = Node{1, nil, nil}
+}
+
+func TestNodeWithChildrenNotEqualsNodeWithoutChildren(t *testing.T) {
+	n1 := Node{1, &Node{0, nil, nil}, nil}
+	n2 := Node{1, nil, nil}
 	if n1.Equals(&n2) || n2.Equals(&n1) {
 		t.FailNow()
 	}
