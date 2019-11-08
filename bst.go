@@ -25,11 +25,11 @@ func (n *Node) Traverse(f func(node *Node)) {
 }
 
 // Equals compares two nodes by value (structural equality)
-func (n1 *Node) Equals(n2 *Node) bool {
+func Equals(n1, n2 *Node) bool {
 	return true
 }
 
 // Slice returns a slice of all tree keys in order
-func (n1 *Node) Slice() []int {
+func (n *Node) Slice() []int {
 	return []int{}
 }
