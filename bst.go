@@ -8,13 +8,13 @@ type Node struct {
 }
 
 // NewNode returns a new node with key `key` and no children
-func NewNode(key int) (n *Node) {
+func NewNode(key int) (n Node) {
 	n.Key = key
 	return
 }
 
 // Traverse walks through tree nodes in order, applying function `f` to every node
-func (n *Node) Traverse(f func(node *Node)) {
+func (n *Node) Traverse(f func(*Node)) {
 	if n.Left != nil {
 		n.Left.Traverse(f)
 	}
@@ -25,11 +25,15 @@ func (n *Node) Traverse(f func(node *Node)) {
 }
 
 // Equals compares two nodes by value (structural equality)
-func Equals(n1, n2 *Node) bool {
+func Equals(n1 *Node, n2 *Node) bool {
 	return true
 }
 
 // Slice returns a slice of all tree keys in order
 func (n *Node) Slice() []int {
-	return []int{}
+	keys := []int{}
+	n.Traverse(func(node *Node) {
+		keys = append(keys, node.Key)
+	})
+	return keys
 }
