@@ -13,6 +13,17 @@ func NewNode(key int) (n *Node) {
 	return
 }
 
+// Traverse walks through tree nodes in order, applying function `f` to every node
+func (n *Node) Traverse(f func(node *Node)) {
+	if n.Left != nil {
+		n.Left.Traverse(f)
+	}
+	f(n)
+	if n.Right != nil {
+		n.Right.Traverse(f)
+	}
+}
+
 // Equals compares two nodes by value (structural equality)
 func (n1 *Node) Equals(n2 *Node) bool {
 	return true
