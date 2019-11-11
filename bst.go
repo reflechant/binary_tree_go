@@ -26,16 +26,21 @@ func (n *Node) Traverse(f func(*Node)) {
 
 // Equals compares two nodes by value (structural equality)
 func Equals(n1 *Node, n2 *Node) bool {
-	keys1, keys2 := n1.Slice(), n2.Slice()
-	if len(keys1) != len(keys2) {
+	eq := true
+	if n1.Left != nil && n2.Left != nil {
+		eq = eq && Equals(n1.Left, n2.Left)
+	} else if (n1.Left == nil && n2.Left != nil) || (n1.Left != nil && n2.Left == nil) {
 		return false
 	}
-	for i := 0; i < len(keys1); i++ {
-		if keys1[i] != keys2[i] {
-			return false
-		}
+	if n1.Key != n2.Key {
+		return false
 	}
-	return true
+	if n1.Right != nil && n2.Right != nil {
+		eq = eq && Equals(n1.Right, n2.Right)
+	} else if (n1.Right == nil && n2.Right != nil) || (n1.Right != nil && n2.Right == nil) {
+		return false
+	}
+	return eq
 }
 
 // Slice returns a slice of all tree keys in order

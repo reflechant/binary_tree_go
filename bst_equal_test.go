@@ -28,8 +28,16 @@ func TestNodesWithDifferentKeysAreNotEqual(t *testing.T) {
 	}
 }
 
-func TestNodeWithChildrenNotEqualsNodeWithoutChildren(t *testing.T) {
+func TestNodeWithLeftNotEqualsSingleNode(t *testing.T) {
 	n1 := Node{1, &Node{0, nil, nil}, nil}
+	n2 := Node{1, nil, nil}
+	if Equals(&n1, &n2) || Equals(&n2, &n1) {
+		t.FailNow()
+	}
+}
+
+func TestNodeWithRightNotEqualsSingleNode(t *testing.T) {
+	n1 := Node{1, nil, &Node{2, nil, nil}}
 	n2 := Node{1, nil, nil}
 	if Equals(&n1, &n2) || Equals(&n2, &n1) {
 		t.FailNow()
