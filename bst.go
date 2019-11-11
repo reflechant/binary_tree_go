@@ -46,3 +46,26 @@ func (n *Node) Slice() []int {
 	})
 	return keys
 }
+
+// Append adds key `key` to subtree, preserving order
+func (n *Node) Append(key int) {
+	for {
+		if key < n.Key {
+			if n.Left != nil {
+				n = n.Left
+			} else {
+				n.Left = &Node{key, nil, nil}
+				break
+			}
+		} else if key > n.Key {
+			if n.Right != nil {
+				n = n.Right
+			} else {
+				n.Right = &Node{key, nil, nil}
+				break
+			}
+		} else {
+			break
+		}
+	}
+}
