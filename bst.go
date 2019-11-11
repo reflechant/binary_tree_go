@@ -26,6 +26,15 @@ func (n *Node) Traverse(f func(*Node)) {
 
 // Equals compares two nodes by value (structural equality)
 func Equals(n1 *Node, n2 *Node) bool {
+	keys1, keys2 := n1.Slice(), n2.Slice()
+	if len(keys1) != len(keys2) {
+		return false
+	}
+	for i := 0; i < len(keys1); i++ {
+		if keys1[i] != keys2[i] {
+			return false
+		}
+	}
 	return true
 }
 
