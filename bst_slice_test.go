@@ -20,3 +20,11 @@ func TestSingleNodeSlice(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestSliceOrder(t *testing.T) {
+	n1 := Node{1, &Node{2, nil, nil}, nil}
+	n2 := Node{1, nil, &Node{2, nil, nil}}
+	if eq(n1.Slice(), n2.Slice()) {
+		t.FailNow()
+	}
+}
