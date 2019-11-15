@@ -74,3 +74,17 @@ func (n *Node) Append(key int) {
 		}
 	}
 }
+
+// Find finds node by key
+func (n *Node) Find(key int) *Node {
+	for n != nil {
+		if key == n.Key {
+			return n
+		} else if key < n.Key {
+			n = n.Left
+		} else if key > n.Key {
+			n = n.Right
+		}
+	}
+	return nil
+}
