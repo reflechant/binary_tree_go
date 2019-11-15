@@ -12,7 +12,7 @@ func TestFindRoot(t *testing.T) {
 
 func TestFindLeftChild(t *testing.T) {
 	n1 := Node{1, &Node{-1, nil, nil}, nil}
-	n2 := n1.Find(-2)
+	n2 := n1.Find(-1)
 	if n2 != n1.Left {
 		t.FailNow()
 	}
@@ -21,7 +21,7 @@ func TestFindLeftChild(t *testing.T) {
 func TestFindRightChild(t *testing.T) {
 	n1 := Node{1, nil, &Node{2, nil, nil}}
 	n2 := n1.Find(2)
-	if n2 != n1.Left {
+	if n2 != n1.Right {
 		t.FailNow()
 	}
 }
