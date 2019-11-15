@@ -25,3 +25,11 @@ func TestFindRightChild(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestFindNonExistent(t *testing.T) {
+	n1 := Node{1, nil, &Node{2, nil, nil}}
+	n2 := n1.Find(5)
+	if n2 != nil {
+		t.FailNow()
+	}
+}
