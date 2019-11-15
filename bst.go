@@ -88,3 +88,8 @@ func (n *Node) Find(key int) *Node {
 	}
 	return nil
 }
+
+// Remove removes node with key `key` from tree
+func (n *Node) Remove(key int) {
+
+}
