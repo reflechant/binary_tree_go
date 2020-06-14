@@ -9,7 +9,7 @@ func TestSingleNodeTraversal(t *testing.T) {
 		func(n *Node) {
 			keys = append(keys, n.Key)
 		})
-	if !(len(keys) == 1 && keys[0] == 1) {
+	if !slicesEqual(keys, []int{1}) {
 		t.FailNow()
 	}
 }
@@ -21,7 +21,7 @@ func TestTraverseNodeWithLeft(t *testing.T) {
 		func(n *Node) {
 			keys = append(keys, n.Key)
 		})
-	if !(len(keys) == 2 && keys[0] == 0 && keys[1] == 1) {
+	if !slicesEqual(keys, []int{0, 1}) {
 		t.FailNow()
 	}
 }
@@ -33,7 +33,7 @@ func TestTraverseNodeWithRight(t *testing.T) {
 		func(n *Node) {
 			keys = append(keys, n.Key)
 		})
-	if !(len(keys) == 2 && keys[0] == 1 && keys[1] == 2) {
+	if !slicesEqual(keys, []int{1, 2}) {
 		t.FailNow()
 	}
 }
