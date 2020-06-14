@@ -7,8 +7,8 @@ type Node struct {
 	Right *Node
 }
 
-// NewNode returns a new node with key `key` and no children
-func NewNode(key int) (n Node) {
+// New returns a new node with key `key` and no children
+func New(key int) (n Node) {
 	n.Key = key
 	return
 }

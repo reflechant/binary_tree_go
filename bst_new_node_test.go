@@ -3,7 +3,7 @@ package bst
 import "testing"
 
 func TestNewNodeEqualsLiteral(t *testing.T) {
-	n1 := NewNode(0)
+	n1 := New(0)
 	n2 := Node{0, nil, nil}
 	if n1 != n2 {
 		t.FailNow()
