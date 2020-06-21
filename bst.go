@@ -8,9 +8,8 @@ type Node struct {
 }
 
 // New returns a new node with key `key` and no children
-func New(key int) (n Node) {
-	n.Key = key
-	return
+func New(key int) *Node {
+	return &Node{Key: key}
 }
 
 // Traverse walks through tree nodes in order, applying function `f` to every node
