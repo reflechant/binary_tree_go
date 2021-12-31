@@ -2,46 +2,36 @@ package bst
 
 import "testing"
 
-func TestAppendRightToNode(t *testing.T) {
-	n1 := Node{1, nil, nil}
-	n1.Append(2)
-	n2 := Node{1, nil, &Node{2, nil, nil}}
-	if !Equals(&n1, &n2) {
-		t.FailNow()
+func TestAppend(t *testing.T) {
+	cases := []struct {
+		name     string
+		a        Node
+		b        int
+		expected Node
+	}{
+		{"append right to single node",
+			Node{1, nil, nil}, 2,
+			Node{1, nil, &Node{2, nil, nil}}},
+		{"append left to single node",
+			Node{1, nil, nil}, 0,
+			Node{1, &Node{0, nil, nil}, nil}},
+		{"append duplicate",
+			Node{1, nil, nil}, 1,
+			Node{1, nil, nil}},
+		{"append left to tree",
+			Node{1, &Node{0, nil, nil}, nil}, -1,
+			Node{1, &Node{0, &Node{-1, nil, nil}, nil}, nil}},
+		{"append right to tree",
+			Node{1, nil, &Node{2, nil, nil}}, 3,
+			Node{1, nil, &Node{2, nil, &Node{3, nil, nil}}}},
 	}
-}
 
-func TestAppendLeftToNode(t *testing.T) {
-	n1 := Node{1, nil, nil}
-	n1.Append(0)
-	n2 := Node{1, &Node{0, nil, nil}, nil}
-	if !Equals(&n1, &n2) {
-		t.FailNow()
-	}
-}
-
-func TestAppendDuplicateCausesNoMutation(t *testing.T) {
-	n1 := Node{1, nil, nil}
-	n1.Append(1)
-	n2 := Node{1, nil, nil}
-	if !Equals(&n1, &n2) {
-		t.FailNow()
-	}
-}
-
-func TestAppendLeftToTree(t *testing.T) {
-	n1 := Node{1, &Node{0, nil, nil}, nil}
-	n1.Append(-1)
-	n2 := Node{1, &Node{0, &Node{-1, nil, nil}, nil}, nil}
-	if !Equals(&n1, &n2) {
-		t.FailNow()
-	}
-}
-func TestAppendRightToTree(t *testing.T) {
-	n1 := Node{1, nil, &Node{2, nil, nil}}
-	n1.Append(3)
-	n2 := Node{1, nil, &Node{2, nil, &Node{3, nil, nil}}}
-	if !Equals(&n1, &n2) {
-		t.FailNow()
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.a.Append(tc.b)
+			if !Equals(&tc.a, &tc.expected) {
+				t.Fail()
+			}
+		})
 	}
 }
