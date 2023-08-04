@@ -28,7 +28,7 @@ func TestAppend(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.a.Append(tc.b)
+			tc.a.Insert(tc.b)
 			if !Equals(&tc.a, &tc.expected) {
 				t.Fail()
 			}

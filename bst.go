@@ -42,8 +42,8 @@ func Equals(n1 *Node, n2 *Node) bool {
 	return eq
 }
 
-// Slice returns a slice of all tree keys in order
-func (n *Node) Slice() []int {
+// Keys returns a slice of all tree keys in order
+func (n *Node) Keys() []int {
 	keys := []int{}
 	n.Map(func(node *Node) {
 		keys = append(keys, node.Key)
@@ -51,8 +51,8 @@ func (n *Node) Slice() []int {
 	return keys
 }
 
-// Append adds key `key` to subtree, preserving order
-func (n *Node) Append(key int) {
+// Insert inserts key `key` to subtree, preserving order
+func (n *Node) Insert(key int) {
 	for {
 		if key < n.Key {
 			if n.Left != nil {
