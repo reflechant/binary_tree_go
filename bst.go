@@ -12,18 +12,18 @@ func New(key int) *Node {
 	return &Node{Key: key}
 }
 
-// Traverse walks through tree nodes in order, applying function `f` to every node
-func (n *Node) Traverse(f func(*Node)) {
+// Map walks through tree nodes in order, applying function `f` to every node
+func (n *Node) Map(f func(*Node)) {
 	if n.Left != nil {
-		n.Left.Traverse(f)
+		n.Left.Map(f)
 	}
 	f(n)
 	if n.Right != nil {
-		n.Right.Traverse(f)
+		n.Right.Map(f)
 	}
 }
 
-// Equals compares two nodes by value (structural equality)
+// Equals compares two trees by value (structural equality)
 func Equals(n1 *Node, n2 *Node) bool {
 	eq := true
 	if n1.Left != nil && n2.Left != nil {
@@ -45,7 +45,7 @@ func Equals(n1 *Node, n2 *Node) bool {
 // Slice returns a slice of all tree keys in order
 func (n *Node) Slice() []int {
 	keys := []int{}
-	n.Traverse(func(node *Node) {
+	n.Map(func(node *Node) {
 		keys = append(keys, node.Key)
 	})
 	return keys

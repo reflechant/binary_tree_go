@@ -5,7 +5,7 @@ import "testing"
 func TestSingleNodeTraversal(t *testing.T) {
 	n1 := Node{1, nil, nil}
 	keys := make([]int, 0)
-	n1.Traverse(
+	n1.Map(
 		func(n *Node) {
 			keys = append(keys, n.Key)
 		})
@@ -17,7 +17,7 @@ func TestSingleNodeTraversal(t *testing.T) {
 func TestTraverseNodeWithLeft(t *testing.T) {
 	n1 := Node{1, &Node{0, nil, nil}, nil}
 	keys := make([]int, 0)
-	n1.Traverse(
+	n1.Map(
 		func(n *Node) {
 			keys = append(keys, n.Key)
 		})
@@ -29,7 +29,7 @@ func TestTraverseNodeWithLeft(t *testing.T) {
 func TestTraverseNodeWithRight(t *testing.T) {
 	n1 := Node{1, nil, &Node{2, nil, nil}}
 	keys := make([]int, 0)
-	n1.Traverse(
+	n1.Map(
 		func(n *Node) {
 			keys = append(keys, n.Key)
 		})
