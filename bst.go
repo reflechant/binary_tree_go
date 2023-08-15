@@ -8,8 +8,15 @@ type Node struct {
 }
 
 // New returns a new node with key `key` and no children
-func New(key int) *Node {
-	return &Node{Key: key}
+func New(keys ...int) *Node {
+	if len(keys) == 0 {
+		return nil
+	}
+	n := &Node{Key: keys[0]}
+	for _, k := range keys[1:] {
+		n.Insert(k)
+	}
+	return n
 }
 
 // Map walks through tree nodes in order, applying function `f` to every node
@@ -105,16 +112,23 @@ func (n *Node) Max() *Node {
 }
 
 // Remove removes node with key `key` from tree (does nothing if not found)
-func (n *Node) Remove(key int) {
-	for n != nil && n.Key != key {
-		if key < n.Key {
-			n = n.Left
-		} else {
-			n = n.Right
-		}
-	}
+func (n *Node) Remove(key int) *Node {
 	if n == nil {
-		return
+		return nil
 	}
-
+	if key < n.Key {
+		n.Left = n.Left.Remove(key)
+	} else if key > n.Key {
+		n.Right = n.Right.Remove(key)
+	} else {
+		if n.Left == nil {
+			return n.Right
+		} else if n.Right == nil {
+			return n.Left
+		}
+		minRight := n.Right.Min()
+		n.Key = minRight.Key
+		n.Right = n.Right.Remove(minRight.Key)
+	}
+	return n
 }
