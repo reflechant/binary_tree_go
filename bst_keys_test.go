@@ -14,14 +14,14 @@ func slicesEqual(seq1, seq2 []int) bool {
 	return true
 }
 
-func TestSingleNodeSlice(t *testing.T) {
+func TestSingleNodeKeys(t *testing.T) {
 	n := Node{Key: 1, Left: nil, Right: nil}
 	if !slicesEqual(n.Keys(), []int{1}) {
 		t.FailNow()
 	}
 }
 
-func TestSliceOrder(t *testing.T) {
+func TestKeysOrder(t *testing.T) {
 	n1 := Node{1, &Node{2, nil, nil}, nil}
 	n2 := Node{1, nil, &Node{2, nil, nil}}
 	if slicesEqual(n1.Keys(), n2.Keys()) {

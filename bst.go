@@ -51,7 +51,7 @@ func (n *Node) Keys() []int {
 	return keys
 }
 
-// Insert inserts key `key` to subtree, preserving order
+// Insert inserts key `key` to subtree, preserving order, duplicates are dropped silently
 func (n *Node) Insert(key int) {
 	for {
 		if key < n.Key {
@@ -88,7 +88,33 @@ func (n *Node) Find(key int) *Node {
 	return nil
 }
 
-// Remove removes node with key `key` from tree
+// Min finds node with the minimum key (the leftmost one in BST)
+func (n *Node) Min() *Node {
+	for n.Left != nil {
+		n = n.Left
+	}
+	return n
+}
+
+// Max finds node with the maximum key (the rightmost one in BST)
+func (n *Node) Max() *Node {
+	for n.Right != nil {
+		n = n.Right
+	}
+	return n
+}
+
+// Remove removes node with key `key` from tree (does nothing if not found)
 func (n *Node) Remove(key int) {
+	for n != nil && n.Key != key {
+		if key < n.Key {
+			n = n.Left
+		} else {
+			n = n.Right
+		}
+	}
+	if n == nil {
+		return
+	}
 
 }
