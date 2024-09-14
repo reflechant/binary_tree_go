@@ -1,32 +1,55 @@
 package bst
 
 import (
-	"reflect"
+	"slices"
 	"testing"
 )
 
 func TestRemoveNonExistent(t *testing.T) {
-	n1 := &Node{1, &Node{-2, nil, nil}, &Node{2, nil, &Node{3, nil, nil}}}
-	n2 := &Node{1, &Node{-2, nil, nil}, &Node{2, nil, &Node{3, nil, nil}}}
+	n1 := &Node[int, string]{1, "",
+		&Node[int, string]{-2, "", nil, nil},
+		&Node[int, string]{2, "", nil,
+			&Node[int, string]{3, "", nil, nil}}}
+	n2 := &Node[int, string]{1, "",
+		&Node[int, string]{-2, "", nil, nil}, &Node[int, string]{2, "", nil,
+			&Node[int, string]{3, "", nil, nil}}}
+
 	n1 = n1.Remove(7)
-	if !Equals(n1, n2) {
+
+	if !n1.Left.EqualKeys(n2) {
 		t.FailNow()
 	}
 }
 
 func TestRemoveRoot(t *testing.T) {
-	n1 := &Node{2, &Node{1, nil, nil}, &Node{3, nil, nil}}
-	n2 := &Node{3, &Node{1, nil, nil}, nil}
+	n1 := &Node[int, string]{2, "",
+		&Node[int, string]{1, "", nil, nil},
+		&Node[int, string]{3, "", nil, nil}}
+	n2 := &Node[int, string]{3, "",
+		&Node[int, string]{1, "", nil, nil}, nil}
+
 	n1 = n1.Remove(2)
-	if !Equals(n1, n2) {
+
+	if !n1.EqualKeys(n2) {
 		t.FailNow()
 	}
 }
 
 func TestRemoveGeneral(t *testing.T) {
-	n1 := New(5, 3, 7, 2, 8, 1)
+	n1 := new(Node[int, string])
+	n1.Insert(5, "")
+	n1.Insert(3, "")
+	n1.Insert(7, "")
+	n1.Insert(2, "")
+	n1.Insert(8, "")
+	n1.Insert(1, "")
+
 	n1 = n1.Remove(5)
-	if !reflect.DeepEqual(n1.Keys(), []int{1, 2, 3, 7, 8}) {
+
+	if !slices.Equal(
+		slices.Collect(n1.Keys()),
+		[]int{1, 2, 3, 7, 8},
+	) {
 		t.FailNow()
 	}
 }

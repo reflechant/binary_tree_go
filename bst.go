@@ -1,78 +1,151 @@
 package bst
 
-// Node represents a node of a binary search tree
-type Node struct {
-	Key   int
-	Left  *Node
-	Right *Node
+import (
+	"cmp"
+	"iter"
+)
+
+// Node represents a generic binary search tree
+type Node[K cmp.Ordered, V any] struct {
+	Key   K
+	Value V
+	Left  *Node[K, V]
+	Right *Node[K, V]
 }
 
-// New returns a new node with key `key` and no children
-func New(keys ...int) *Node {
-	if len(keys) == 0 {
-		return nil
+// All returns an iterator of all tree (key,value) pairs in order
+func (n *Node[K, V]) All() iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		if n.Left != nil {
+			n.Left.All()
+		}
+		if !yield(n.Key, n.Value) {
+			return
+		}
+		if n.Right != nil {
+			n.Right.All()
+		}
 	}
-	n := &Node{Key: keys[0]}
-	for _, k := range keys[1:] {
-		n.Insert(k)
-	}
-	return n
 }
 
-// Map walks through tree nodes in order, applying function `f` to every node
-func (n *Node) Map(f func(*Node)) {
+// Keys returns an iterator of all tree keys in order
+func (n *Node[K, V]) Keys2() iter.Seq[K] {
+	return func(yield func(K) bool) {
+		if n.Left != nil {
+			for k := range n.Left.Keys() {
+				yield(k)
+			}
+		}
+		if !yield(n.Key) {
+			return
+		}
+		if n.Right != nil {
+			for k := range n.Right.Keys() {
+				yield(k)
+			}
+		}
+	}
+}
+
+// Keys returns an iterator of all tree keys in order
+func (n *Node[K, V]) Keys() iter.Seq[K] {
+	return func(yield func(K) bool) {
+		if n.Left != nil {
+			n.Left.keys(yield)
+		}
+		if !yield(n.Key) {
+			return
+		}
+		if n.Right != nil {
+			n.Right.keys(yield)
+		}
+	}
+}
+
+func (n *Node[K, V]) keys(yield func(K) bool) {
 	if n.Left != nil {
-		n.Left.Map(f)
+		n.Left.keys(yield)
 	}
-	f(n)
+	if !yield(n.Key) {
+		return
+	}
 	if n.Right != nil {
-		n.Right.Map(f)
+		n.Right.keys(yield)
 	}
 }
 
-// Equals compares two trees by value (structural equality)
-func Equals(n1 *Node, n2 *Node) bool {
-	eq := true
-	if n1.Left != nil && n2.Left != nil {
-		eq = eq && Equals(n1.Left, n2.Left)
-	} else if (n1.Left == nil && n2.Left != nil) || (n1.Left != nil && n2.Left == nil) {
-		return false
+// Values returns an iterator of all tree values in order
+func (n *Node[K, V]) Values() iter.Seq[V] {
+	return func(yield func(V) bool) {
+		if n.Left != nil {
+			n.Left.Values()
+		}
+		if !yield(n.Value) {
+			return
+		}
+		if n.Right != nil {
+			n.Right.Values()
+		}
 	}
-	if n1.Key != n2.Key {
-		return false
-	}
-	if n1.Right != nil && n2.Right != nil {
-		eq = eq && Equals(n1.Right, n2.Right)
-	} else if (n1.Right == nil && n2.Right != nil) || (n1.Right != nil && n2.Right == nil) {
-		return false
-	}
-	return eq
 }
 
-// Keys returns a slice of all tree keys in order
-func (n *Node) Keys() []int {
-	keys := []int{}
-	n.Map(func(node *Node) {
-		keys = append(keys, node.Key)
-	})
-	return keys
+// Map walks through tree nodes in order, applying function `f` to every node and returning an iterator over the resulting tree
+func (n *Node[K, V]) Map(f func(*Node[K, V])) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		if n.Left != nil {
+			n.Left.Map(f)
+		}
+		f(n)
+		if !yield(n.Key, n.Value) {
+			return
+		}
+		if n.Right != nil {
+			n.Right.Map(f)
+		}
+	}
 }
 
-// Insert inserts key `key` to subtree, preserving order, duplicates are dropped silently
-func (n *Node) Insert(key int) {
+// EqualKeys compares trees by key
+func (n *Node[K, V]) EqualKeys(n2 *Node[K, V]) bool {
+	next1, stop1 := iter.Pull(n.Keys())
+	defer stop1()
+	next2, stop2 := iter.Pull(n2.Keys())
+	defer stop2()
+
+	k1, ok1 := next1()
+	k2, ok2 := next2()
+	for ok1 || ok2 {
+		// one sequence is shorter -> unequal
+		if ok1 != ok2 {
+			return false
+		}
+
+		if k1 != k2 {
+			return false
+		}
+
+		k1, ok1 = next1()
+		k2, ok2 = next2()
+	}
+
+	return true
+}
+
+// Insert inserts a (key,value) pair to the tree, preserving order, duplicates are dropped silently
+func (n *Node[K, V]) Insert(key K, value V) {
 	for {
 		if key < n.Key {
 			if n.Left != nil {
 				n = n.Left
 			} else {
-				n.Left = &Node{key, nil, nil}
+				n.Left = &Node[K, V]{key, value, nil, nil}
 				break
 			}
 		} else if key > n.Key {
 			if n.Right != nil {
 				n = n.Right
 			} else {
-				n.Right = &Node{key, nil, nil}
+				n.Right = &Node[K, V]{key, value, nil, nil}
 				break
 			}
 		} else {
@@ -82,7 +155,7 @@ func (n *Node) Insert(key int) {
 }
 
 // Find finds node by key
-func (n *Node) Find(key int) *Node {
+func (n *Node[K, V]) Find(key K) *Node[K, V] {
 	for n != nil {
 		if key == n.Key {
 			return n
@@ -96,7 +169,7 @@ func (n *Node) Find(key int) *Node {
 }
 
 // Min finds node with the minimum key (the leftmost one in BST)
-func (n *Node) Min() *Node {
+func (n *Node[K, V]) Min() *Node[K, V] {
 	for n.Left != nil {
 		n = n.Left
 	}
@@ -104,7 +177,7 @@ func (n *Node) Min() *Node {
 }
 
 // Max finds node with the maximum key (the rightmost one in BST)
-func (n *Node) Max() *Node {
+func (n *Node[K, V]) Max() *Node[K, V] {
 	for n.Right != nil {
 		n = n.Right
 	}
@@ -112,7 +185,7 @@ func (n *Node) Max() *Node {
 }
 
 // Remove removes node with key `key` from tree (does nothing if not found)
-func (n *Node) Remove(key int) *Node {
+func (n *Node[K, V]) Remove(key K) *Node[K, V] {
 	if n == nil {
 		return nil
 	}

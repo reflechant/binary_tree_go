@@ -5,39 +5,45 @@ import "testing"
 func TestEquals(t *testing.T) {
 	cases := []struct {
 		name     string
-		a        Node
-		b        Node
+		a        Node[int, string]
+		b        Node[int, string]
 		expected bool
 	}{
 		{"single nodes equality test",
-			Node{1, nil, nil},
-			Node{1, nil, nil},
+			Node[int, string]{1, "a", nil, nil},
+			Node[int, string]{1, "b", nil, nil},
 			true},
 		{"tree equality test",
-			Node{2, &Node{1, nil, nil}, &Node{3, nil, nil}},
-			Node{2, &Node{1, nil, nil}, &Node{3, nil, nil}},
+			Node[int, string]{2, "",
+				&Node[int, string]{1, "", nil, nil},
+				&Node[int, string]{3, "", nil, nil}},
+			Node[int, string]{2, "",
+				&Node[int, string]{1, "", nil, nil},
+				&Node[int, string]{3, "", nil, nil}},
 			true},
-		{"nodes with different values are not equal",
-			Node{1, nil, nil},
-			Node{2, nil, nil},
+		{"nodes with different keys are not equal",
+			Node[int, string]{1, "", nil, nil},
+			Node[int, string]{2, "", nil, nil},
 			false,
 		},
 		{"single node not equals node with left child",
-			Node{1, &Node{0, nil, nil}, nil},
-			Node{1, nil, nil},
+			Node[int, string]{1, "",
+				&Node[int, string]{0, "", nil, nil}, nil},
+			Node[int, string]{1, "", nil, nil},
 			false,
 		},
 		{"single node not equals node with right child",
-			Node{1, nil, &Node{2, nil, nil}},
-			Node{1, nil, nil},
+			Node[int, string]{1, "", nil,
+				&Node[int, string]{2, "", nil, nil}},
+			Node[int, string]{1, "", nil, nil},
 			false,
 		},
 	}
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			if Equals(&tc.a, &tc.b) != tc.expected ||
-				Equals(&tc.b, &tc.a) != tc.expected {
+			if tc.a.EqualKeys(&tc.b) != tc.expected ||
+				tc.b.EqualKeys(&tc.a) != tc.expected {
 				t.Fail()
 			}
 		})
