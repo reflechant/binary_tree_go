@@ -1,8 +1,9 @@
 package bst
 
 import (
-	"slices"
 	"testing"
+
+	"github.com/alecthomas/assert/v2"
 )
 
 func TestSingleNodeTraversal(t *testing.T) {
@@ -12,10 +13,8 @@ func TestSingleNodeTraversal(t *testing.T) {
 		func(n *Node[int, string]) {
 			keys = append(keys, n.Key)
 		})
-		
-	if !slices.Equal(keys, []int{1}) {
-		t.FailNow()
-	}
+
+	assert.Equal(t, []int{1}, keys)
 }
 
 func TestTraverseNodeWithLeft(t *testing.T) {
@@ -26,9 +25,7 @@ func TestTraverseNodeWithLeft(t *testing.T) {
 		func(n *Node[int, string]) {
 			keys = append(keys, n.Key)
 		})
-	if !slices.Equal(keys, []int{0, 1}) {
-		t.FailNow()
-	}
+	assert.Equal(t, []int{0, 1}, keys)
 }
 
 func TestTraverseNodeWithRight(t *testing.T) {
@@ -39,7 +36,5 @@ func TestTraverseNodeWithRight(t *testing.T) {
 		func(n *Node[int, string]) {
 			keys = append(keys, n.Key)
 		})
-	if !slices.Equal(keys, []int{1, 2}) {
-		t.FailNow()
-	}
+	assert.Equal(t, []int{1, 2}, keys)
 }

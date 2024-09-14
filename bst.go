@@ -17,33 +17,26 @@ type Node[K cmp.Ordered, V any] struct {
 func (n *Node[K, V]) All() iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		if n.Left != nil {
-			n.Left.All()
+			n.Left.all(yield)
 		}
 		if !yield(n.Key, n.Value) {
 			return
 		}
 		if n.Right != nil {
-			n.Right.All()
+			n.Right.all(yield)
 		}
 	}
 }
 
-// Keys returns an iterator of all tree keys in order
-func (n *Node[K, V]) Keys2() iter.Seq[K] {
-	return func(yield func(K) bool) {
-		if n.Left != nil {
-			for k := range n.Left.Keys() {
-				yield(k)
-			}
-		}
-		if !yield(n.Key) {
-			return
-		}
-		if n.Right != nil {
-			for k := range n.Right.Keys() {
-				yield(k)
-			}
-		}
+func (n *Node[K, V]) all(yield func(K, V) bool) {
+	if n.Left != nil {
+		n.Left.all(yield)
+	}
+	if !yield(n.Key, n.Value) {
+		return
+	}
+	if n.Right != nil {
+		n.Right.all(yield)
 	}
 }
 
@@ -78,14 +71,26 @@ func (n *Node[K, V]) keys(yield func(K) bool) {
 func (n *Node[K, V]) Values() iter.Seq[V] {
 	return func(yield func(V) bool) {
 		if n.Left != nil {
-			n.Left.Values()
+			n.Left.values(yield)
 		}
 		if !yield(n.Value) {
 			return
 		}
 		if n.Right != nil {
-			n.Right.Values()
+			n.Right.values(yield)
 		}
+	}
+}
+
+func (n *Node[K, V]) values(yield func(V) bool) {
+	if n.Left != nil {
+		n.Left.values(yield)
+	}
+	if !yield(n.Value) {
+		return
+	}
+	if n.Right != nil {
+		n.Right.values(yield)
 	}
 }
 
@@ -184,7 +189,7 @@ func (n *Node[K, V]) Max() *Node[K, V] {
 	return n
 }
 
-// Remove removes node with key `key` from tree (does nothing if not found)
+// Remove removes node with key `key` from tree (does nothing if not found) and returns a new tree root.
 func (n *Node[K, V]) Remove(key K) *Node[K, V] {
 	if n == nil {
 		return nil
@@ -203,5 +208,6 @@ func (n *Node[K, V]) Remove(key K) *Node[K, V] {
 		n.Key = minRight.Key
 		n.Right = n.Right.Remove(minRight.Key)
 	}
+
 	return n
 }

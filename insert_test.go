@@ -1,6 +1,10 @@
 package bst
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/alecthomas/assert/v2"
+)
 
 func TestInsert(t *testing.T) {
 	cases := []struct {
@@ -30,9 +34,7 @@ func TestInsert(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.initial.Insert(tc.key, tc.value)
-			if !tc.initial.EqualKeys(&tc.expected) {
-				t.Fail()
-			}
+			assert.True(t, tc.initial.EqualKeys(&tc.expected))
 		})
 	}
 }

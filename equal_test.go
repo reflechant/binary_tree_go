@@ -1,6 +1,10 @@
 package bst
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/alecthomas/assert/v2"
+)
 
 func TestEquals(t *testing.T) {
 	cases := []struct {
@@ -42,10 +46,8 @@ func TestEquals(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			if tc.a.EqualKeys(&tc.b) != tc.expected ||
-				tc.b.EqualKeys(&tc.a) != tc.expected {
-				t.Fail()
-			}
+			assert.Equal(t, tc.expected, tc.a.EqualKeys(&tc.b))
+			assert.Equal(t, tc.expected, tc.b.EqualKeys(&tc.a))
 		})
 	}
 }
