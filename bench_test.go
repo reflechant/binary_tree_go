@@ -5,9 +5,9 @@ import (
 )
 
 func BenchmarkKeys(b *testing.B) {
-	n := &Node[int, string]{1, "", nil, nil}
+	n := &Node[int, string]{10000, "", nil, nil}
 	for i := range 10 {
-		n.Insert(i, "")
+		n.Insert(2048+i, "")
 	}
 	b.ResetTimer()
 	var sum int
@@ -22,9 +22,9 @@ func BenchmarkKeys(b *testing.B) {
 var q int
 
 func BenchmarkKeys2(b *testing.B) {
-	n := &Node[int, string]{1, "", nil, nil}
+	n := &Node[int, string]{10000, "", nil, nil}
 	for i := range 10 {
-		n.Insert(i, "")
+		n.Insert(2048+i, "")
 	}
 	b.ResetTimer()
 	var sum int
